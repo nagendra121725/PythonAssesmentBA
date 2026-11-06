@@ -1,45 +1,30 @@
-# Python Programming Online Assessment Portal
+# Python Assessment Portal
 
-A Flask + SQLite web application for a public student assessment.
+Flask + SQLite assessment portal for 40 randomized MCQs and 10 beginner Python coding tasks (50 marks total).
 
-## Included features
-- 50-question Python MCQ bank (basic to medium)
-- 25 randomly selected questions per attempt
-- Randomized answer option order per student
-- 30-minute countdown and automatic submission from the browser
-- Server-side grading; answer key is not sent to the test page
-- Immediate result and answer review
-- Faculty login and results dashboard
-- CSV export of student scores
-- One submitted attempt per roll number
+## Features
+- 40 MCQs selected randomly from a 50-question bank (1 mark each).
+- 10 beginner coding questions (1 mark each), automatically checked against predefined input/output test cases.
+- 60-minute assessment, one submitted attempt per roll number.
+- Immediate student result; faculty dashboard with MCQ, coding and total marks, submitted code, and CSV export.
+- SQLite database; configure a Render persistent disk for durable results.
 
-## Run locally
-1. Install Python 3.10 or newer.
-2. Open a terminal in this folder.
-3. Run: `pip install -r requirements.txt`
-4. Set environment variables before starting:
-   - `SECRET_KEY` to a long random secret
-   - `ADMIN_PASSWORD` to your own strong faculty password
-5. Run: `python app.py`
-6. Open `http://127.0.0.1:5000`
+## Local run
+```bash
+pip install -r requirements.txt
+python app.py
+```
+Open http://127.0.0.1:5000. Set `SECRET_KEY`, `ADMIN_PASSWORD`, and `DATABASE_PATH` before deployment.
 
-## Deploy publicly on Render
-1. Create a GitHub repository and upload all files in this project.
-2. Create a new **Web Service** in Render and connect that repository.
-3. Render detects `render.yaml`, or enter:
-   - Build command: `pip install -r requirements.txt`
-   - Start command: `gunicorn app:app`
-4. Add environment variables:
-   - `SECRET_KEY`: a long random value
-   - `ADMIN_PASSWORD`: a strong private admin password
-5. Attach a persistent disk mounted at `/var/data` and set:
-   - `DATABASE_PATH=/var/data/assessment.db`
-6. Deploy. Render will provide a public `https://...onrender.com` URL to share with students.
+## Render
+Build command: `pip install -r requirements.txt`
+Start command: `gunicorn app:app`
+Environment variables:
+- `SECRET_KEY`: unique random secret
+- `ADMIN_PASSWORD`: strong faculty password
+- `DATABASE_PATH`: `/var/data/assessment.db`
 
-## Important deployment notes
-- Do not use the default admin password in a public deployment.
-- SQLite data needs persistent storage. Without a persistent disk, results may be lost during redeploy/restart.
-- Configure a persistent disk/volume on your hosting plan and confirm its pricing and availability.
-- This starter app limits one completed attempt per roll number. It does not provide institutional single sign-on or strong anti-cheating/proctoring.
-- The student timer is enforced using a server-side deadline when a submission reaches the server. A student who closes the browser without submitting may remain listed as in progress.
-- The app uses UTC timestamps in the admin dashboard/export.
+Attach a persistent disk mounted at `/var/data`.
+
+## Important code-execution note
+The beginner code evaluator uses AST allowlisting, a short subprocess timeout, restricted built-ins and no imports/attribute access except selected string methods. This reduces risk but is not a hardened multi-tenant sandbox. For high-stakes or public untrusted code execution, integrate a dedicated sandbox service (e.g. Judge0) or run isolated containers with strict CPU, memory, filesystem and network controls.
