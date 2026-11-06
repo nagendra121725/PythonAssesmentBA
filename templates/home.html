@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>Python Assessment</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<div class="wrap"><div class="hero"><div class="eyebrow">ONLINE ASSESSMENT</div><h1>Python Programming Test</h1><p>Basic to Medium Level · Python 3</p><div class="stats"><div><b>{{ per_test }}</b><span>Random questions</span></div><div><b>{{ minutes }} min</b><span>Time limit</span></div><div><b>1 mark</b><span>Per question</span></div></div></div>
+<div class="panel"><h2>Student details</h2><p class="muted">Enter your details carefully before starting. You can attempt this assessment once per roll number.</p>
+<form method="post" action="/start"><label>Full name *</label><input name="student_name" required maxlength="100" placeholder="Enter your full name"><label>Roll number *</label><input name="roll_number" required maxlength="50" placeholder="Enter your roll number"><label>Email (optional)</label><input name="email" type="email" maxlength="150" placeholder="Enter your email"><button class="primary" type="submit">Start assessment</button></form>
+</div><div class="note">Questions and answer choices are randomized for each student. Your score and answer review will appear immediately after submission.</div><a class="admin-link" href="/admin">Faculty / Admin login</a></div>
+{% with messages = get_flashed_messages() %}{% if messages %}<script>alert({{ messages[0]|tojson }});</script>{% endif %}{% endwith %}
+</body></html>

@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>Python Test</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<div class="test-top"><div><b>Python Programming Test</b><small>{{ student }}</small></div><div class="timer" id="timer">--:--</div></div>
+<form method="post" id="quizForm"><div class="wrap quiz-wrap"><div class="progress"><span id="progressText">Question 1 of {{ quiz|length }}</span><div class="bar"><i id="bar"></i></div></div>
+{% for q in quiz %}<section class="question-card" data-q="{{ q.pos }}" {% if not loop.first %}hidden{% endif %}><div class="q-label">QUESTION {{ loop.index }}</div><h2>{{ q.text|replace('\n', '<br>')|safe }}</h2><div class="choices">
+{% for option in q.options %}<label class="choice"><input type="radio" name="q{{ q.pos }}" value="{{ q.original_indices[loop.index0] }}"><span class="letter">{{ ["A","B","C","D"][loop.index0] }}</span><span>{{ option }}</span></label>{% endfor %}
+</div></section>{% endfor %}
+<div class="nav"><button type="button" class="secondary" id="prev">Previous</button><button type="button" class="primary" id="next">Next</button><button type="submit" class="submit" id="submit" hidden>Submit test</button></div>
+<p class="muted small">Your answers are submitted when you select Submit test. The test will submit automatically when the timer reaches zero.</p></div></form>
+<script>
+let current=0; const cards=[...document.querySelectorAll('.question-card')]; const timer=document.getElementById('timer'); let remaining={{ remaining }};
+function show(){cards.forEach((c,i)=>c.hidden=i!==current);document.getElementById('progressText').textContent=`Question ${current+1} of ${cards.length}`;document.getElementById('bar').style.width=((current+1)/cards.length*100)+'%';document.getElementById('prev').disabled=current===0;document.getElementById('next').hidden=current===cards.length-1;document.getElementById('submit').hidden=current!==cards.length-1;}
+document.getElementById('prev').onclick=()=>{if(current>0){current--;show();}};
+document.getElementById('next').onclick=()=>{if(current<cards.length-1){current++;show();}};
+function tick(){let m=Math.floor(remaining/60),s=remaining%60;timer.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(remaining<=0){document.getElementById('quizForm').submit();return;}remaining--;setTimeout(tick,1000);}show();tick();
+document.getElementById('quizForm').addEventListener('submit',e=>{if(!confirm('Submit your assessment now?'))e.preventDefault();});
+</script></body></html>
